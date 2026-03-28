@@ -4,10 +4,13 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/didimozg/proxmox-lxc-update/ci.yml?branch=main&label=CI)](https://github.com/didimozg/proxmox-lxc-update/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/didimozg/proxmox-lxc-update)](./LICENSE)
 
-This repository currently includes two host-side Bash scripts for Proxmox LXC maintenance:
+Russian documentation: [README_RU.md](./README_RU.md).
+
+This repository currently includes three host-side maintenance scripts for Proxmox:
 
 - `update-lxc.sh`: update running containers directly from the Proxmox host
 - `update-lxc-safe.sh`: create a pre-update snapshot, run `update-lxc.sh`, and optionally roll back on failure
+- `backup-health-check.sh`: audit vzdump backup jobs, recent backup task health, and backup coverage across the cluster
 
 `update-lxc.sh` is the main updater for running Proxmox LXC containers executed directly from the Proxmox host with `pct exec`.
 
@@ -47,8 +50,10 @@ If `ostype` is missing or not useful, the script falls back to package manager d
 Clone the repository or copy the scripts to the Proxmox host:
 
 ```bash
+chmod +x backup-health-check.sh
 chmod +x update-lxc.sh
 chmod +x update-lxc-safe.sh
+sudo ./backup-health-check.sh --help
 sudo ./update-lxc.sh --help
 sudo ./update-lxc-safe.sh --help
 ```
@@ -170,6 +175,68 @@ Disable automatic rollback:
 - Manual interruption does not trigger an automatic rollback workflow; handle interrupted containers deliberately.
 - Snapshot creation still depends on the underlying Proxmox storage supporting container snapshots.
 
+## Backup Health Check Script
+
+`backup-health-check.sh` is a read-only cluster health report for Proxmox backup jobs and recent `vzdump` task history.
+
+It is designed to answer a few practical questions quickly:
+
+- are there any enabled backup jobs at all
+- when did each node last complete a successful `vzdump`
+- are there recent warning or failed backup tasks
+- are there guests not covered by current backup jobs
+- are any nodes overdue based on configurable freshness thresholds
+
+### Quick Start
+
+Run a cluster-wide health check:
+
+```bash
+./backup-health-check.sh
+```
+
+Check only one node:
+
+```bash
+./backup-health-check.sh --node minipveone
+```
+
+Use stricter thresholds:
+
+```bash
+./backup-health-check.sh --warn-age-hours 48 --crit-age-hours 96
+```
+
+Write the report to a custom log file:
+
+```bash
+./backup-health-check.sh --log-file /root/pve-backup-health-check.log
+```
+
+### Backup Health Check Options
+
+```text
+--node pve,minipveone
+--warn-age-hours HOURS
+--crit-age-hours HOURS
+--recent-problem-hours HOURS
+--task-limit N
+--problem-limit N
+--log-file PATH
+--no-color
+-h, --help
+```
+
+### Backup Health Check Notes
+
+- The script is read-only and does not start, stop, or modify guests.
+- It uses cluster API data from `pvesh`, so it should be run as `root` on a Proxmox node.
+- Default thresholds are intentionally weekly-friendly:
+  `warn=192h`, `crit=336h`, `recent-problem-window=336h`.
+- A node can still be reported as healthy even if older historical backup failures exist, as long as they are outside the recent problem window.
+- Guests returned by `/cluster/backup-info/not-backed-up` are reported separately so you can catch coverage gaps.
+- The script currently focuses on `vzdump` job health and coverage, not on detailed PBS datastore verification.
+
 ## Options
 
 ```text
@@ -207,6 +274,12 @@ The safe wrapper uses its own log by default:
 
 ```text
 /var/log/pve-lxc-safe-update.log
+```
+
+The backup health check uses:
+
+```text
+/var/log/pve-backup-health-check.log
 ```
 
 The log includes:
