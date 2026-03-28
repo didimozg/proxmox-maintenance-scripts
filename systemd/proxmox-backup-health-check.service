@@ -1,6 +1,6 @@
 [Unit]
 Description=Proxmox backup health check
-Documentation=https://github.com/didimozg/proxmox-lxc-update
+Documentation=https://github.com/didimozg/proxmox-maintenance-scripts
 Wants=network-online.target
 After=network-online.target
 

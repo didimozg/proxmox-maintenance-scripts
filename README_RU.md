@@ -1,8 +1,8 @@
-# Proxmox LXC Update
+# Proxmox Maintenance Scripts
 
-[![Release](https://img.shields.io/github/v/release/didimozg/proxmox-lxc-update?display_name=tag)](https://github.com/didimozg/proxmox-lxc-update/releases)
-[![CI](https://img.shields.io/github/actions/workflow/status/didimozg/proxmox-lxc-update/ci.yml?branch=main&label=CI)](https://github.com/didimozg/proxmox-lxc-update/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/didimozg/proxmox-lxc-update)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/didimozg/proxmox-maintenance-scripts?display_name=tag)](https://github.com/didimozg/proxmox-maintenance-scripts/releases)
+[![CI](https://img.shields.io/github/actions/workflow/status/didimozg/proxmox-maintenance-scripts/ci.yml?branch=main&label=CI)](https://github.com/didimozg/proxmox-maintenance-scripts/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/didimozg/proxmox-maintenance-scripts)](./LICENSE)
 
 English documentation: [README.md](./README.md).
 
