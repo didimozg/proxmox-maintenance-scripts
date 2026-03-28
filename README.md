@@ -22,11 +22,11 @@ It is designed for practical day-to-day administration:
 - preview actions with `--dry-run`
 - run serially or in parallel
 - enforce a per-container timeout
-- detect the guest package manager automatically
+- detect the package manager inside each LXC container automatically
 - keep a readable host-side log and final summary
 - make Debian/Ubuntu updates more resilient with `ForceIPv4` and retries
 
-## Supported Guest Package Managers
+## Supported Package Managers In LXC Containers
 
 - `apt-get` for Debian and Ubuntu
 - `dnf` / `yum` for Fedora, CentOS, Rocky Linux, and AlmaLinux
@@ -95,7 +95,7 @@ Run multiple updates at once:
 ./update-lxc.sh --parallel 3
 ```
 
-Use `dist-upgrade` for Debian/Ubuntu guests:
+Use `dist-upgrade` for Debian/Ubuntu containers:
 
 ```bash
 ./update-lxc.sh --apt-mode dist-upgrade
@@ -189,7 +189,7 @@ It is designed to answer a few practical questions quickly:
 - are there any enabled backup jobs at all
 - when did each node last complete a successful `vzdump`
 - are there recent warning or failed backup tasks
-- are there guests not covered by current backup jobs
+- are there VMs or containers not covered by current backup jobs
 - are any nodes overdue based on configurable freshness thresholds
 
 ### Quick Start
@@ -245,7 +245,7 @@ TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=... ./backup-health-check.sh --telegram-
 
 ### Backup Health Check Notes
 
-- The script is read-only and does not start, stop, or modify guests.
+- The script is read-only and does not start, stop, or modify VMs or containers.
 - It uses cluster API data from `pvesh`, so it should be run as `root` on a Proxmox node.
 - Default thresholds are intentionally weekly-friendly:
   `warn=192h`, `crit=336h`, `recent-problem-window=336h`.
@@ -368,7 +368,7 @@ Use interactive mode:
 
 ### Deployment Notes
 
-- The deploy script is intended to be run from an admin workstation or another trusted host, not from inside a guest.
+- The deploy script is intended to be run from an admin workstation or another trusted host, not from inside a VM or container.
 - Remote script paths default to `/media/script`, which matches the layout used in this repository's current Proxmox nodes.
 - Generated Telegram values are written only into the remote config file; they are not committed back into the repository.
 - If `--skip-backup-health-systemd` is used, only the three shell scripts are synchronized.
@@ -395,7 +395,7 @@ Use interactive mode:
 2. Applies `--ct` and `--exclude` filters.
 3. Re-checks the container state before running updates.
 4. Skips containers with an active Proxmox `lock`.
-5. Builds the correct package manager command for the guest OS.
+5. Builds the correct package manager command for the container OS.
 6. Runs updates inside the container with `pct exec`.
 7. Collects success, skip, timeout, and failure results.
 8. Prints a final summary and writes a persistent log.
