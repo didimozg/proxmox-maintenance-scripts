@@ -67,13 +67,13 @@ log_error()   { log_raw "ERROR"   "$RED"    "$1"; }
 
 usage() {
     cat >&2 <<EOF
-Usage: $SCRIPT_NAME --host root@192.168.4.10 [options]
+Usage: $SCRIPT_NAME --host root@192.0.2.10 [options]
 
 Deploy Proxmox maintenance scripts and optional backup-health-check systemd files
 to one or more Proxmox nodes over SSH/SCP.
 
 Options:
-  --host HOST                    Add a deployment target, for example root@192.168.4.10
+  --host HOST                    Add a deployment target, for example root@192.0.2.10
   --interactive                  Prompt for deployment paths and backup-health-check config values
   --script-dir PATH              Remote script directory (default: ${DEFAULT_SCRIPT_DIR})
   --systemd-dir PATH             Remote systemd unit directory (default: ${DEFAULT_SYSTEMD_DIR})
@@ -98,15 +98,15 @@ Options:
   -h, --help                     Show this help
 
 Examples:
-  $SCRIPT_NAME --host root@192.168.4.10
-  $SCRIPT_NAME --host root@192.168.4.10 --host root@192.168.4.12
+  $SCRIPT_NAME --host root@192.0.2.10
+  $SCRIPT_NAME --host root@192.0.2.10 --host root@192.0.2.11
   $SCRIPT_NAME --interactive
-  $SCRIPT_NAME --host root@192.168.4.10 --dry-run
-  $SCRIPT_NAME --host root@192.168.4.10 --ssh-option StrictHostKeyChecking=accept-new
-  $SCRIPT_NAME --host root@192.168.4.10 --ssh-bin ssh.exe --scp-bin scp.exe
-  $SCRIPT_NAME --host root@192.168.4.10 --enable-backup-health-timer
-  $SCRIPT_NAME --host root@192.168.4.10 --skip-backup-health-systemd
-  $SCRIPT_NAME --host root@192.168.4.10 --overwrite-config --telegram-chat-id 123456789
+  $SCRIPT_NAME --host root@192.0.2.10 --dry-run
+  $SCRIPT_NAME --host root@192.0.2.10 --ssh-option StrictHostKeyChecking=accept-new
+  $SCRIPT_NAME --host root@192.0.2.10 --ssh-bin ssh.exe --scp-bin scp.exe
+  $SCRIPT_NAME --host root@192.0.2.10 --enable-backup-health-timer
+  $SCRIPT_NAME --host root@192.0.2.10 --skip-backup-health-systemd
+  $SCRIPT_NAME --host root@192.0.2.10 --overwrite-config --telegram-chat-id 123456789
 EOF
 }
 
@@ -275,7 +275,7 @@ run_interactive_setup() {
     log_info "Interactive mode enabled"
 
     if [[ "${#HOSTS[@]}" -eq 0 ]]; then
-        read -r -p "Deployment hosts (comma-separated, for example root@192.168.4.10,root@192.168.4.12): " host_input
+        read -r -p "Deployment hosts (comma-separated, for example root@192.0.2.10,root@192.0.2.11): " host_input
         append_hosts_from_csv "$host_input"
     fi
 

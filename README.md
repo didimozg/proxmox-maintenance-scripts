@@ -203,7 +203,7 @@ Run a cluster-wide health check:
 Check only one node:
 
 ```bash
-./backup-health-check.sh --node minipveone
+./backup-health-check.sh --node pve-node-1
 ```
 
 Use stricter thresholds:
@@ -227,7 +227,7 @@ TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=... ./backup-health-check.sh --telegram-
 ### Backup Health Check Options
 
 ```text
---node pve,minipveone
+--node pve-node-1,pve-node-2
 --warn-age-hours HOURS
 --crit-age-hours HOURS
 --recent-problem-hours HOURS
@@ -322,40 +322,40 @@ It deploys:
 Deploy to two nodes:
 
 ```bash
-./deploy-proxmox-maintenance.sh --host root@192.168.4.10 --host root@192.168.4.12
+./deploy-proxmox-maintenance.sh --host root@192.0.2.10 --host root@192.0.2.11
 ```
 
 Preview actions only:
 
 ```bash
-./deploy-proxmox-maintenance.sh --host root@192.168.4.10 --dry-run
+./deploy-proxmox-maintenance.sh --host root@192.0.2.10 --dry-run
 ```
 
 First-time connect to a new node from Git Bash:
 
 ```bash
-./deploy-proxmox-maintenance.sh --host root@192.168.4.10 --ssh-option StrictHostKeyChecking=accept-new
+./deploy-proxmox-maintenance.sh --host root@192.0.2.10 --ssh-option StrictHostKeyChecking=accept-new
 ```
 
 Force Windows OpenSSH clients from Git Bash:
 
 ```bash
-./deploy-proxmox-maintenance.sh --host root@192.168.4.10 --ssh-bin ssh.exe --scp-bin scp.exe
+./deploy-proxmox-maintenance.sh --host root@192.0.2.10 --ssh-bin ssh.exe --scp-bin scp.exe
 ```
 
 Deploy and enable the backup-health-check timer:
 
 ```bash
-./deploy-proxmox-maintenance.sh --host root@192.168.4.10 --enable-backup-health-timer
+./deploy-proxmox-maintenance.sh --host root@192.0.2.10 --enable-backup-health-timer
 ```
 
 Deploy with generated Telegram settings:
 
 ```bash
 ./deploy-proxmox-maintenance.sh \
-  --host root@192.168.4.10 \
+  --host root@192.0.2.10 \
   --overwrite-config \
-  --backup-health-check-args "--node pve" \
+  --backup-health-check-args "--node pve-node-1" \
   --telegram-bot-token 123456:replace-me \
   --telegram-chat-id 123456789
 ```
